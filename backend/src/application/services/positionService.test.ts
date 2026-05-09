@@ -22,8 +22,8 @@ describe('getCandidatesByPositionService', () => {
         applicationDate: new Date(),
         currentInterviewStep: 1,
         notes: null,
-        candidate: { firstName: 'John', lastName: 'Doe' },
-        interviewStep: { name: 'Technical Interview' },
+        candidate: { id: 1, firstName: 'John', lastName: 'Doe' },
+        interviewStep: { id: 1, name: 'Technical Interview' },
         interviews: [{ score: 5 }, { score: 3 }],
       },
     ];
@@ -33,11 +33,13 @@ describe('getCandidatesByPositionService', () => {
     const result = await getCandidatesByPositionService(1);
     expect(result).toEqual([
       {
+        id: 1,
+        applicationId: 1,
         fullName: 'John Doe',
         currentInterviewStep: 'Technical Interview',
+        currentInterviewStepId: 1,
         averageScore: 4,
       },
     ]);
   });
 });
-

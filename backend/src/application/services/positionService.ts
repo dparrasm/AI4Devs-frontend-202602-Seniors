@@ -23,6 +23,7 @@ export const getCandidatesByPositionService = async (positionId: number) => {
         return applications.map(app => ({
             fullName: `${app.candidate.firstName} ${app.candidate.lastName}`,
             currentInterviewStep: app.interviewStep.name,
+            currentInterviewStepId: app.interviewStep.id,
             averageScore: calculateAverageScore(app.interviews),
             id: app.candidate.id,
             applicationId: app.id
@@ -30,6 +31,43 @@ export const getCandidatesByPositionService = async (positionId: number) => {
     } catch (error) {
         console.error('Error retrieving candidates by position:', error);
         throw new Error('Error retrieving candidates by position');
+    }
+};
+
+export const getPositionsService = async () => {
+    try {
+        const positions = await prisma.position.findMany({
+            orderBy: {
+                applicationDeadline: 'asc'
+            },
+            include: {
+                company: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                },
+                _count: {
+                    select: {
+                        applications: true
+                    }
+                }
+            }
+        });
+
+        return positions.map(position => ({
+            id: position.id,
+            title: position.title,
+            status: position.status,
+            isVisible: position.isVisible,
+            location: position.location,
+            applicationDeadline: position.applicationDeadline,
+            company: position.company,
+            candidateCount: position._count.applications
+        }));
+    } catch (error) {
+        console.error('Error retrieving positions:', error);
+        throw new Error('Error retrieving positions');
     }
 };
 

@@ -185,6 +185,45 @@ paths:
           description: Invalid file type, only PDF and DOCX are allowed
         '500':
           description: Error during the file upload process
+  /position:
+    get:
+      summary: Get positions
+      description: Retrieves positions available for recruiter workflows and pipeline entry points.
+      responses:
+        '200':
+          description: List of positions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    status:
+                      type: string
+                    isVisible:
+                      type: boolean
+                    location:
+                      type: string
+                    applicationDeadline:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    company:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                    candidateCount:
+                      type: integer
+        '500':
+          description: Internal server error
   /position/{id}/candidates:
     get:
       summary: Get candidates by position
@@ -206,10 +245,16 @@ paths:
                 items:
                   type: object
                   properties:
+                    id:
+                      type: integer
+                    applicationId:
+                      type: integer
                     fullName:
                       type: string
                     currentInterviewStep:
                       type: string
+                    currentInterviewStepId:
+                      type: integer
                     averageScore:
                       type: number
         '404':
